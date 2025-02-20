@@ -20,7 +20,7 @@ const connectDB = async () => {
       return mongoose;
     });
 
-  cached.conn = await cached.process;
+  cached.conn = await cached.promise;
   return cached.conn;
 };
 
