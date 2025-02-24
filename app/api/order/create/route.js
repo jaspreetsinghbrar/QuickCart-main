@@ -1,4 +1,5 @@
 import ProductModel from "@/models/ProductModel";
+import UserModel from "@/models/UserModel";
 import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
@@ -16,5 +17,25 @@ export async function POST(request) {
       const product = await ProductModel.findById(items.product);
       return acc + product.OfferPrice * items.quantity;
     }, 0);
-  } catch (error) {}
+
+    await inngest.send({
+      name: "order/created",
+      data: {
+        userId,
+        items,
+        address,
+        amount: amount + Math.floor(amount * 0.02),
+        date: Date.now(),
+      },
+    });
+
+    //Clear user cart
+    const user = await UserModel.findById(userId);
+    user.cartItems = {};
+    await user.save();
+
+    return NextResponse({ success: true, message: "Order Placed" });
+  } catch (error) {
+    return NextResponse({ success: false, message: error.message });
+  }
 }
