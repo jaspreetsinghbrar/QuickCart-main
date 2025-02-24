@@ -3,6 +3,7 @@ import ProductModel from "@/models/ProductModel";
 import { getAuth } from "@clerk/nextjs/server";
 import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
+import connectDB from "@/config/db";
 
 //configure cloudinary
 cloudinary.config({
@@ -79,6 +80,6 @@ export async function POST(request) {
       newProduct,
     });
   } catch (error) {
-    NextResponse.json({ success: false, message: error.message });
+    return NextResponse.json({ success: false, message: error.message });
   }
 }
