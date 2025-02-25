@@ -6,6 +6,7 @@ import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import Loading from "@/components/Loading";
+import axios from "axios";
 
 const MyOrders = () => {
   const { currency, getToken, user } = useAppContext();
@@ -22,6 +23,7 @@ const MyOrders = () => {
       });
       if (data.success) {
         setOrders(data.orders.reverse());
+        setLoading(false);
       } else {
         toast.error(data.message);
       }
